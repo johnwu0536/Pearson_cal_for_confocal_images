@@ -1,0 +1,38 @@
+clear all;clc;close all
+
+% 假设 A 和 B 是两个通道的图像文件，格式为 .jpg
+A = imread('Red.jpg'); % 读取第一个通道的图像
+B = imread('Green.jpg'); % 读取第二个通道的图像
+
+% 将图像转换为灰度图，因为 JPEG 文件可能是 RGB 格式
+if size(A, 3) == 3
+    A = rgb2gray(A);
+end
+if size(B, 3) == 3
+    B = rgb2gray(B);
+end
+
+% 转换为双精度浮点数
+A = double(A);
+B = double(B);
+
+% 计算每个通道的平均强度
+mean_A = mean(A(:));
+mean_B = mean(B(:));
+
+% 计算 Pearson 相关系数
+numerator = sum((A(:) - mean_A) .* (B(:) - mean_B));
+denominator = sqrt(sum((A(:) - mean_A).^2) * sum((B(:) - mean_B).^2));
+pearson_coefficient = numerator / denominator;
+
+% 绘制散点图
+figure;
+scatter(A(:), B(:), 5, 'filled'); % 绘制散点，点大小设为 5
+xlabel('Channel 1 Intensity');
+ylabel('Channel 2 Intensity');
+title(['Scatter Plot of Channel Intensities (Pearson r = ' num2str(pearson_coefficient) ')']);
+grid on;
+
+% 显示 Pearson 相关系数
+disp(['Pearson 相关系数: ', num2str(pearson_coefficient)]);
+
